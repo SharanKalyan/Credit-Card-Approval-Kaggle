@@ -34,4 +34,4 @@ Confusion Matrix :
 
 Here's the ROC Curve! 
 
-![image](https://user-images.githubusercontent.com/20862520/157605936-23d021cf-4290-4c5d-a337-aed09c47e644.png)
+![image](https://user-images.githubusercontent.com/20862520/157607031-435b9004-4e97-4b57-a2cf-0d486576dd65.png)
