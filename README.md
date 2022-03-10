@@ -9,9 +9,9 @@ I have Analysed the data and visualized it. While analysis, I was able to infer 
 
 There are 3 Notebooks in this project.
 
-1. 1_Data_Cleansing_Notebook.ipynb - This notebook contains the codes for cleaning the data and creating the "clean_data.csv" file, which will be used in the analysis and visualizations.
-2.  The 2_Visualizations_Analysis.ipynb notebook contains the visualizations and analysis aspects of the data.  
-3.  The 3_Machine_Learning.ipynb notebook contains the codes for the Machine learning aspects of the project.
+1. 1_Data_Cleansing_Notebook.ipynb - This notebook contains the codes for cleaning the data and creating the "clean_data.csv" file, which will be used in the        analysis and visualizations.
+2. The 2_Visualizations_Analysis.ipynb notebook contains the visualizations and analysis aspects of the data and another file "clean_data_for_ml.csv" has been        created which will be used in the ML algorithms!.  
+3. The 3_Machine_Learning.ipynb notebook contains the codes for the Machine learning aspects of the project.
 
 Despite the data being highly imbalanced, I was able to achive an F1 score of 0.97 for the 0 class and 1.0 for the 1 class. 
 
