@@ -13,7 +13,7 @@ There are 3 Notebooks in this project.
 2. "2_Visualizations_Analysis.ipynb" notebook contains the visualizations and analysis aspects of the data and another file "clean_data_for_ml.csv" has been            created which will be used in the ML algorithms!.  
 3. "3_Machine_Learning.ipynb" notebook contains the codes for the Machine learning aspects of the project.
 
-Despite the data being highly imbalanced, I was able to achive an F1 score of 0.97 for the 0 class and 1.0 for the 1 class. 
+Despite the data being highly imbalanced, I was able to achive an F1 score of 0.97 for the 0 class and 1.0 for the 1 class. The Analysis I have made helped me identify the most important feature and remove the unwanted features. 
 
 
 Accuracy : 0.9997
