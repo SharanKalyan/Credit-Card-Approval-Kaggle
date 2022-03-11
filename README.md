@@ -1,6 +1,6 @@
 # Credit-Card-Approval-Kaggle
 
-The source of data : https//:www.kaggle.com
+The source of data : https://www.kaggle.com/
 
 The data is about approving Credit cards for the customers based on some parameters like age, gender, income, realty, education, family status etc. 
 The data is highly imballanced with only less than 1% of the data belonging to one class (0) and the other 99% belonging to the other class. (1) 
