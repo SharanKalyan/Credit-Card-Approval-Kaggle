@@ -23,7 +23,7 @@ The Analysis I have made helped me identify the most important feature and remov
 
 Accuracy : 0.9997
 
-Confusion Matrix :
+Confusion Matrix:
 
     [[19    1]
      [0  3750]]
