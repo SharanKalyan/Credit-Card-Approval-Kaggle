@@ -20,7 +20,7 @@ Despite the data being highly imbalanced, I was able to achive an F1 score of 0.
 
 The Analysis I have made helped me identify the most important feature and remove the unwanted features. 
 
-Accuracy : 0.9997
+Accuracy : 0.99
 
 Confusion Matrix:
 
