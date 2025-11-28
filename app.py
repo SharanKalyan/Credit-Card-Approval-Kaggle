@@ -35,7 +35,7 @@ FEATURES = [
     'Debt_Score', 'Debit_Score_Catg'
 ]
 
-st.header("Make a Prediction")
+st.header("Make a Prediction (Just give value 1 for all the categorical fields for this demo and for numerical inputs, you can give your desired number!)")
 
 # -------------------------------
 # Build inputs dynamically
@@ -115,3 +115,4 @@ if uploaded:
 
     except Exception as e:
         st.error(f"Batch prediction failed: {e}")
+
