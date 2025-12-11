@@ -22,7 +22,7 @@ Despite the data being highly imbalanced, I was able to achive an F1 score of 0.
 
 The Analysis I have made helped me identify the most important feature and remove the unwanted features. 
 
-Confusion Matrix:
+### Confusion Matrix:
 
     [[19    1]
      [0  3750]]
@@ -36,8 +36,8 @@ Confusion Matrix:
        macro avg       1.00      0.97      0.99      3770
     weighted avg       1.00      1.00      1.00      3770
 
-Here's the ROC Curve! 
+### Here's the ROC Curve:
 
 ![image](https://user-images.githubusercontent.com/20862520/157607031-435b9004-4e97-4b57-a2cf-0d486576dd65.png)
 
-Accuracy : 0.99
+### Accuracy: 0.99
