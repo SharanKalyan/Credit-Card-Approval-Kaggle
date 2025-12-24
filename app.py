@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import joblib
 from pathlib import Path
+import sklearn
+st.write("scikit-learn version:", sklearn.__version__)
 
 # --------------------------------------------------
 # App Title
@@ -91,6 +93,7 @@ if submitted:
 
     except Exception as e:
         st.error(f"Prediction failed: {e}")
+
 
 
 
