@@ -1,12 +1,12 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 import joblib
 from pathlib import Path
 
 # --------------------------------------------------
 # App Title
 # --------------------------------------------------
+st.set_page_config(page_title="Credit Risk Prediction", layout="centered")
 st.title("Credit Risk Prediction App")
 
 # --------------------------------------------------
@@ -19,141 +19,71 @@ def load_model(path="random_forest.pkl"):
 model_path = Path("random_forest.pkl")
 
 if not model_path.exists():
-    st.error("Model file not found. Upload random_forest.pkl to the repo.")
+    st.error("❌ Model file not found. Upload random_forest.pkl")
     st.stop()
-else:
-    model = load_model(str(model_path))
+
+model = load_model(str(model_path))
 
 # --------------------------------------------------
-# Feature List (MODEL EXPECTATION)
+# Features used by model
 # --------------------------------------------------
 FEATURES = [
-    'Applicant_Gender', 'Owned_Car', 'Owned_Realty', 'Total_Children',
-    'Total_Income', 'Total_Income_Catg', 'Income_Type', 'Education_Type',
-    'Family_Status', 'Housing_Type', 'Owned_Mobile_Phone',
-    'Owned_Work_Phone', 'Owned_Phone', 'Owned_Email', 'Job_Title',
-    'Total_Family_Members', 'Applicant_Age', 'Years_of_Working',
-    'Total_Bad_Debt', 'Total_Bad_Debt_Catg', 'Total_Good_Debt',
-    'Debt_Score', 'Debit_Score_Catg'
+    "Applicant_Gender",
+    "Applicant_Age",
+    "Total_Income",
+    "Total_Good_Debt",
+    "Total_Bad_Debt",
+    "Debt_Score"
 ]
 
-st.header("Make a Prediction")
-
 # --------------------------------------------------
-# Build Inputs
+# UI Inputs (ONLY THESE 5)
 # --------------------------------------------------
-input_data = {}
+with st.form("credit_form"):
 
-with st.form("predict_form"):
-
-    # -------------------------------
-    # Gender (RADIO BUTTON)
-    # -------------------------------
-    st.subheader("Personal Information")
-    gender = st.radio("Applicant_Gender", ["Male", "Female"])
-    input_data["Applicant_Gender"] = gender
-
-    # -------------------------------
-    # Categorical Inputs
-    # -------------------------------
-    categorical_cols = [
-        'Owned_Car', 'Owned_Realty', 'Total_Income_Catg',
-        'Income_Type', 'Education_Type', 'Family_Status',
-        'Housing_Type', 'Owned_Mobile_Phone', 'Owned_Work_Phone',
-        'Owned_Phone', 'Owned_Email', 'Job_Title',
-        'Total_Bad_Debt_Catg', 'Debit_Score_Catg'
-    ]
-
-    st.subheader("Categorical Inputs")
-
-    for col in categorical_cols:
-        input_data[col] = st.text_input(col, value="")
-
-    # -------------------------------
-    # Numeric Inputs
-    # -------------------------------
-    numeric_cols = [
-        'Total_Children', 'Total_Income', 'Total_Family_Members',
-        'Applicant_Age', 'Years_of_Working',
-        'Total_Bad_Debt', 'Total_Good_Debt'
-    ]
-
-    st.subheader("Numeric Inputs")
-
-    for col in numeric_cols:
-        input_data[col] = st.number_input(col, value=0.0)
+    gender = st.radio("Applicant Gender", ["Male", "Female"])
+    age = st.number_input("Applicant Age", min_value=18, step=1)
+    income = st.number_input("Total Income", min_value=0.0)
+    good_debt = st.number_input("Total Good Debt", min_value=0.0)
+    bad_debt = st.number_input("Total Bad Debt", min_value=0.0)
 
     submitted = st.form_submit_button("Predict")
 
 # --------------------------------------------------
-# Run Prediction
+# Prediction Logic
 # --------------------------------------------------
 if submitted:
     try:
-        processed_data = input_data.copy()
+        # Encode Gender
+        gender_encoded = 1 if gender == "Male" else 0
 
-        # -------------------------------
-        # Encode Gender (App2 Logic)
-        # -------------------------------
-        processed_data["Applicant_Gender"] = (
-            1 if processed_data["Applicant_Gender"] == "Male" else 0
-        )
+        # Create Debt Score
+        debt_score = good_debt - bad_debt
 
-        # -------------------------------
-        # Create Debt Score (App2 Logic)
-        # -------------------------------
-        processed_data["Debt_Score"] = (
-            processed_data["Total_Good_Debt"]
-            - processed_data["Total_Bad_Debt"]
-        )
-
-        # -------------------------------
-        # Create DataFrame (ORDER MATTERS)
-        # -------------------------------
+        # Build input DataFrame
         X = pd.DataFrame(
-            [[processed_data[col] for col in FEATURES]],
+            [[
+                gender_encoded,
+                age,
+                income,
+                good_debt,
+                bad_debt,
+                debt_score
+            ]],
             columns=FEATURES
         )
 
-        # -------------------------------
-        # Prediction
-        # -------------------------------
-        pred = model.predict(X)
-        st.success(f"Prediction: {pred[0]}")
+        # Predict
+        prob = model.predict_proba(X)[0][1]
 
-        if hasattr(model, "predict_proba"):
-            proba = model.predict_proba(X)[0]
-            st.write("Probabilities:", proba.tolist())
-
-    except Exception as e:
-        st.error(f"Prediction failed: {e}")
-
-# --------------------------------------------------
-# Batch Prediction via CSV
-# --------------------------------------------------
-st.write("---")
-st.header("Batch Prediction from CSV")
-
-uploaded = st.file_uploader(
-    "Upload CSV with same feature columns (already preprocessed)",
-    type=["csv"]
-)
-
-if uploaded:
-    df = pd.read_csv(uploaded)
-    st.write("Preview:", df.head())
-
-    try:
-        preds = model.predict(df[FEATURES])
-        df["prediction"] = preds
-        st.dataframe(df)
-
-        csv = df.to_csv(index=False).encode("utf-8")
-        st.download_button(
-            "Download Predictions (CSV)",
-            csv,
-            "preds.csv"
-        )
-
-    except Exception as e:
-        st.error(f"Batch prediction failed: {e}")
+        if prob >= 0.7:
+            st.success(
+                f"✅ APPROVED\n\n"
+                f"Approval Probability: {prob:.2f}\n\n"
+                f"Debt Score: {debt_score}"
+            )
+        else:
+            st.error(
+                f"❌ REJECTED\n\n"
+                f"Risk Probability: {1 - prob:.2f}\n\n"
+                f"D
