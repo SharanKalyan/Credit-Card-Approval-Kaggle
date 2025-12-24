@@ -103,7 +103,7 @@ if submitted:
         # Predict probability
         prob = model.predict_proba(X)[0][1]
 
-        if prob >= 0.7:
+        if prob >= 0.5:
             st.success(
                 f"✅ APPROVED\n\n"
                 f"Approval Probability: {prob:.2f}\n\n"
@@ -118,5 +118,6 @@ if submitted:
 
     except Exception as e:
         st.error(f"Prediction failed: {e}")
+
 
 
