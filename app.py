@@ -13,10 +13,10 @@ st.title("Credit Risk Prediction App")
 # Load Model
 # --------------------------------------------------
 @st.cache_resource
-def load_model(path="random_forest.pkl"):
+def load_model(path="random_forest_quantised.pkl"):
     return joblib.load(path)
 
-model_path = Path("random_forest.pkl")
+model_path = Path("random_forest_quantised.pkl")
 
 if not model_path.exists():
     st.error("❌ Model file not found. Upload random_forest.pkl")
@@ -91,3 +91,4 @@ if submitted:
 
     except Exception as e:
         st.error(f"Prediction failed: {e}")
+
