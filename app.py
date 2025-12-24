@@ -8,7 +8,7 @@ import sklearn
 # App Config & Title
 # --------------------------------------------------
 st.set_page_config(page_title="Credit Risk Prediction", layout="centered")
-st.title("Credit Risk Prediction App")
+st.title("Credit Card Approval Prediction App")
 
 # --------------------------------------------------
 # Load Model
@@ -118,4 +118,5 @@ if submitted:
 
     except Exception as e:
         st.error(f"Prediction failed: {e}")
+
 
