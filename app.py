@@ -4,11 +4,14 @@ import numpy as np
 import joblib
 from pathlib import Path
 
+# --------------------------------------------------
+# App Title
+# --------------------------------------------------
 st.title("Credit Risk Prediction App")
 
-# -------------------------------
+# --------------------------------------------------
 # Load Model
-# -------------------------------
+# --------------------------------------------------
 @st.cache_resource
 def load_model(path="random_forest.pkl"):
     return joblib.load(path)
@@ -21,10 +24,9 @@ if not model_path.exists():
 else:
     model = load_model(str(model_path))
 
-
-# -------------------------------
-# Feature List
-# -------------------------------
+# --------------------------------------------------
+# Feature List (MODEL EXPECTATION)
+# --------------------------------------------------
 FEATURES = [
     'Applicant_Gender', 'Owned_Car', 'Owned_Realty', 'Total_Children',
     'Total_Income', 'Total_Income_Catg', 'Income_Type', 'Education_Type',
@@ -35,35 +37,46 @@ FEATURES = [
     'Debt_Score', 'Debit_Score_Catg'
 ]
 
-st.header("Make a Prediction (Just give value 1 for all the categorical fields for this demo and for numerical inputs, you can give your desired number!)")
+st.header("Make a Prediction")
 
-# -------------------------------
-# Build inputs dynamically
-# -------------------------------
+# --------------------------------------------------
+# Build Inputs
+# --------------------------------------------------
 input_data = {}
 
 with st.form("predict_form"):
 
-    # CATEGORICAL FEATURES (dropdowns)
-    categorical_cols = [
-        'Applicant_Gender', 'Owned_Car', 'Owned_Realty', 
-        'Total_Income_Catg', 'Income_Type', 'Education_Type',
-        'Family_Status', 'Housing_Type', 'Owned_Mobile_Phone',
-        'Owned_Work_Phone', 'Owned_Phone', 'Owned_Email', 
-        'Job_Title', 'Total_Bad_Debt_Catg', 'Debit_Score_Catg'
-    ]
+    # -------------------------------
+    # Gender (RADIO BUTTON)
+    # -------------------------------
+    st.subheader("Personal Information")
+    gender = st.radio("Applicant_Gender", ["Male", "Female"])
+    input_data["Applicant_Gender"] = gender
 
-    # NUMERIC FEATURES (number_input)
-    numeric_cols = [
-        'Total_Children', 'Total_Income', 'Total_Family_Members',
-        'Applicant_Age', 'Years_of_Working', 'Total_Bad_Debt',
-        'Total_Good_Debt', 'Debt_Score'
+    # -------------------------------
+    # Categorical Inputs
+    # -------------------------------
+    categorical_cols = [
+        'Owned_Car', 'Owned_Realty', 'Total_Income_Catg',
+        'Income_Type', 'Education_Type', 'Family_Status',
+        'Housing_Type', 'Owned_Mobile_Phone', 'Owned_Work_Phone',
+        'Owned_Phone', 'Owned_Email', 'Job_Title',
+        'Total_Bad_Debt_Catg', 'Debit_Score_Catg'
     ]
 
     st.subheader("Categorical Inputs")
 
     for col in categorical_cols:
         input_data[col] = st.text_input(col, value="")
+
+    # -------------------------------
+    # Numeric Inputs
+    # -------------------------------
+    numeric_cols = [
+        'Total_Children', 'Total_Income', 'Total_Family_Members',
+        'Applicant_Age', 'Years_of_Working',
+        'Total_Bad_Debt', 'Total_Good_Debt'
+    ]
 
     st.subheader("Numeric Inputs")
 
@@ -72,17 +85,40 @@ with st.form("predict_form"):
 
     submitted = st.form_submit_button("Predict")
 
-
-# -------------------------------
+# --------------------------------------------------
 # Run Prediction
-# -------------------------------
+# --------------------------------------------------
 if submitted:
     try:
-        row = [input_data[col] for col in FEATURES]
-        X = pd.DataFrame([row], columns=FEATURES)
+        processed_data = input_data.copy()
 
+        # -------------------------------
+        # Encode Gender (App2 Logic)
+        # -------------------------------
+        processed_data["Applicant_Gender"] = (
+            1 if processed_data["Applicant_Gender"] == "Male" else 0
+        )
+
+        # -------------------------------
+        # Create Debt Score (App2 Logic)
+        # -------------------------------
+        processed_data["Debt_Score"] = (
+            processed_data["Total_Good_Debt"]
+            - processed_data["Total_Bad_Debt"]
+        )
+
+        # -------------------------------
+        # Create DataFrame (ORDER MATTERS)
+        # -------------------------------
+        X = pd.DataFrame(
+            [[processed_data[col] for col in FEATURES]],
+            columns=FEATURES
+        )
+
+        # -------------------------------
+        # Prediction
+        # -------------------------------
         pred = model.predict(X)
-
         st.success(f"Prediction: {pred[0]}")
 
         if hasattr(model, "predict_proba"):
@@ -92,14 +128,16 @@ if submitted:
     except Exception as e:
         st.error(f"Prediction failed: {e}")
 
-
-# -------------------------------
+# --------------------------------------------------
 # Batch Prediction via CSV
-# -------------------------------
+# --------------------------------------------------
 st.write("---")
 st.header("Batch Prediction from CSV")
 
-uploaded = st.file_uploader("Upload CSV with same feature columns", type=["csv"])
+uploaded = st.file_uploader(
+    "Upload CSV with same feature columns (already preprocessed)",
+    type=["csv"]
+)
 
 if uploaded:
     df = pd.read_csv(uploaded)
@@ -111,8 +149,11 @@ if uploaded:
         st.dataframe(df)
 
         csv = df.to_csv(index=False).encode("utf-8")
-        st.download_button("Download Predictions (CSV)", csv, "preds.csv")
+        st.download_button(
+            "Download Predictions (CSV)",
+            csv,
+            "preds.csv"
+        )
 
     except Exception as e:
         st.error(f"Batch prediction failed: {e}")
-
