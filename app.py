@@ -5,11 +5,6 @@ from pathlib import Path
 import sklearn
 
 # --------------------------------------------------
-# Debug (remove later if you want)
-# --------------------------------------------------
-st.write("scikit-learn version:", sklearn.__version__)
-
-# --------------------------------------------------
 # App Config & Title
 # --------------------------------------------------
 st.set_page_config(page_title="Credit Risk Prediction", layout="centered")
@@ -123,3 +118,4 @@ if submitted:
 
     except Exception as e:
         st.error(f"Prediction failed: {e}")
+
