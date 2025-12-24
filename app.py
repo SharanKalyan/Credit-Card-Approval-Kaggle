@@ -3,10 +3,14 @@ import pandas as pd
 import joblib
 from pathlib import Path
 import sklearn
+
+# --------------------------------------------------
+# Debug (remove later if you want)
+# --------------------------------------------------
 st.write("scikit-learn version:", sklearn.__version__)
 
 # --------------------------------------------------
-# App Title
+# App Config & Title
 # --------------------------------------------------
 st.set_page_config(page_title="Credit Risk Prediction", layout="centered")
 st.title("Credit Risk Prediction App")
@@ -27,7 +31,7 @@ if not model_path.exists():
 model = load_model(str(model_path))
 
 # --------------------------------------------------
-# Features used by model
+# Features used by model (ORDER MATTERS)
 # --------------------------------------------------
 FEATURES = [
     "Applicant_Gender",
@@ -39,15 +43,41 @@ FEATURES = [
 ]
 
 # --------------------------------------------------
-# UI Inputs (ONLY THESE 5)
+# UI Inputs
 # --------------------------------------------------
 with st.form("credit_form"):
 
-    gender = st.radio("Applicant Gender", ["Male", "Female"])
-    age = st.number_input("Applicant Age", min_value=18, step=1)
-    income = st.number_input("Total Income", min_value=0.0)
-    good_debt = st.number_input("Total Good Debt", min_value=0.0)
-    bad_debt = st.number_input("Total Bad Debt", min_value=0.0)
+    gender = st.selectbox(
+        "Applicant Gender",
+        ["Male", "Female"]
+    )
+
+    age = st.number_input(
+        "Applicant Age",
+        min_value=18,
+        step=1
+    )
+
+    income = st.number_input(
+        "Total Income",
+        min_value=0,
+        value=100000,
+        step=10000
+    )
+
+    good_debt = st.number_input(
+        "Total Number of Good Debts",
+        min_value=0,
+        value=10,
+        step=1
+    )
+
+    bad_debt = st.number_input(
+        "Total Number of Bad Debts",
+        min_value=0,
+        value=5,
+        step=1
+    )
 
     submitted = st.form_submit_button("Predict")
 
@@ -75,7 +105,7 @@ if submitted:
             columns=FEATURES
         )
 
-        # Predict
+        # Predict probability
         prob = model.predict_proba(X)[0][1]
 
         if prob >= 0.7:
@@ -93,7 +123,3 @@ if submitted:
 
     except Exception as e:
         st.error(f"Prediction failed: {e}")
-
-
-
-
