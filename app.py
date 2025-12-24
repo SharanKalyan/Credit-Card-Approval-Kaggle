@@ -19,7 +19,7 @@ def load_model(path="random_forest_quantised.pkl"):
 model_path = Path("random_forest_quantised.pkl")
 
 if not model_path.exists():
-    st.error("❌ Model file not found. Upload random_forest.pkl")
+    st.error("❌ Model file not found. Upload random_forest_quantised.pkl")
     st.stop()
 
 model = load_model(str(model_path))
@@ -91,5 +91,6 @@ if submitted:
 
     except Exception as e:
         st.error(f"Prediction failed: {e}")
+
 
 
