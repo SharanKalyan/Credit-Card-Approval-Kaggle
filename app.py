@@ -113,12 +113,12 @@ if submitted:
         else:
             st.error(
                 f"❌ REJECTED\n\n"
-                f"Risk Probability: {1 - prob:.2f} | Debt Score: {debt_score}\n\n"
-                f"Debt Score: {debt_score}"
+                f"Risk Probability: {1 - prob:.2f} | Debt Score: {debt_score}"
             )
 
     except Exception as e:
         st.error(f"Prediction failed: {e}")
+
 
 
 
