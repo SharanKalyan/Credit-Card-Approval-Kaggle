@@ -50,6 +50,7 @@ with st.form("credit_form"):
     age = st.number_input(
         "Applicant Age",
         min_value=18,
+        value=25,
         step=1
     )
 
@@ -118,6 +119,7 @@ if submitted:
 
     except Exception as e:
         st.error(f"Prediction failed: {e}")
+
 
 
 
