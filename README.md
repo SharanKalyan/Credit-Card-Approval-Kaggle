@@ -2,7 +2,7 @@
 
 Data Source: https://www.kaggle.com/
 
-Demo of this project is hosted on Streamlit: https://credit-card-approval-application.streamlit.app/
+Model deployed on Streamlit: https://credit-card-approval-application.streamlit.app/
 
 The data is about approving Credit cards for the customers based on some parameters like age, gender, income, realty, education, family status etc. 
 The data was highly imballanced with only less than 1% of the data belonging to one class (0) and the other 99% belonging to the other class. (1) 
