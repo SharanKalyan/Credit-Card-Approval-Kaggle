@@ -40,4 +40,3 @@ The Analysis I have made helped me identify the most important feature and remov
 
 ![image](https://user-images.githubusercontent.com/20862520/157607031-435b9004-4e97-4b57-a2cf-0d486576dd65.png)
 
-### Accuracy: 0.99
