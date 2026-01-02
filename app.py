@@ -10,6 +10,15 @@ import sklearn
 st.set_page_config(page_title="Credit Risk Prediction", layout="centered")
 st.title("Credit Card Approval Prediction App")
 
+st.markdown(
+    """
+    🔗 **Project Repository:**  
+    [Credit Card Approval – Kaggle Project](https://github.com/SharanKalyan/Credit-Card-Approval-Kaggle)
+    """
+)
+
+st.markdown("---")
+
 # --------------------------------------------------
 # Load Model
 # --------------------------------------------------
@@ -117,6 +126,7 @@ if submitted:
 
     except Exception as e:
         st.error(f"Prediction failed: {e}")
+
 
 
 
