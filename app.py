@@ -13,7 +13,7 @@ st.title("Credit Card Approval Prediction App")
 st.markdown(
     """
     🔗 **Project Repository:**  
-    [Credit Card Approval – Kaggle Project](https://github.com/SharanKalyan/Credit-Card-Approval-Kaggle)
+    [Credit Card Approval system](https://github.com/SharanKalyan/Credit-Card-Approval-Kaggle)
     """
 )
 
@@ -126,6 +126,7 @@ if submitted:
 
     except Exception as e:
         st.error(f"Prediction failed: {e}")
+
 
 
 
