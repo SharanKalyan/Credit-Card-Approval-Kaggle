@@ -2,20 +2,78 @@ import streamlit as st
 import pandas as pd
 import joblib
 from pathlib import Path
-import sklearn
+import base64
 
 # --------------------------------------------------
-# App Config & Title
+# Page Config
 # --------------------------------------------------
-st.set_page_config(page_title="Credit Risk Prediction", layout="centered")
-st.title("Credit Card Approval Prediction App")
+st.set_page_config(
+    page_title="Credit Card Approval Prediction",
+    layout="centered"
+)
+
+# --------------------------------------------------
+# Background Image Styling
+# --------------------------------------------------
+def add_bg_from_local(image_file):
+    with open(image_file, "rb") as f:
+        encoded = base64.b64encode(f.read()).decode()
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background-image:
+            linear-gradient(
+                rgba(255,255,255,0.88),
+                rgba(255,255,255,0.88)
+            ),
+            url("data:image/png;base64,{encoded}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }}
+
+        button[kind="primary"] {{
+            background-color: #1f4fd8;
+            border-radius: 8px;
+            padding: 0.6em 1.5em;
+            font-weight: 600;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+add_bg_from_local("bank_bg.png")
+
+# --------------------------------------------------
+# Title & Hero Section
+# --------------------------------------------------
+st.title("💳 Credit Card Approval Prediction App")
+
+st.markdown(
+    """
+    <div style="text-align:center; padding: 20px 0;">
+        <h2 style="color:#1f4fd8;">
+            Check your credit card eligibility here
+        </h2>
+        <p style="font-size:16px; color:#444;">
+            Enter a few details to instantly know your approval chances.<br>
+            Powered by Machine Learning & Credit Risk Scoring.
+        </p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 st.markdown(
     """
     🔗 **Project Repository:**  
-    [Credit Card Approval system](https://github.com/SharanKalyan/Credit-Card-Approval-Kaggle)
+    [Credit Card Approval System](https://github.com/SharanKalyan/Credit-Card-Approval-Kaggle)
     """
 )
+
+st.info("🔒 This is a demo ML application. No data is stored.")
 
 st.markdown("---")
 
@@ -35,7 +93,7 @@ if not model_path.exists():
 model = load_model(str(model_path))
 
 # --------------------------------------------------
-# Features used by model (ORDER MATTERS)
+# Features (ORDER MATTERS)
 # --------------------------------------------------
 FEATURES = [
     "Applicant_Gender",
@@ -47,14 +105,13 @@ FEATURES = [
 ]
 
 # --------------------------------------------------
-# UI Inputs
+# Single Prediction Form
 # --------------------------------------------------
+st.header("🧍 Individual Credit Check")
+
 with st.form("credit_form"):
 
-    gender = st.selectbox(
-        "Applicant Gender",
-        ["Male", "Female"]
-    )
+    gender = st.selectbox("Applicant Gender", ["Male", "Female"])
 
     age = st.number_input(
         "Applicant Age",
@@ -86,18 +143,11 @@ with st.form("credit_form"):
 
     submitted = st.form_submit_button("Predict")
 
-# --------------------------------------------------
-# Prediction Logic
-# --------------------------------------------------
 if submitted:
     try:
-        # Encode Gender
         gender_encoded = 1 if gender == "Male" else 0
-
-        # Create Debt Score
         debt_score = good_debt - bad_debt
 
-        # Build input DataFrame
         X = pd.DataFrame(
             [[
                 gender_encoded,
@@ -110,34 +160,36 @@ if submitted:
             columns=FEATURES
         )
 
-        # Predict probability
         prob = model.predict_proba(X)[0][1]
 
         if prob >= 0.5:
             st.success(
-                f"✅ APPROVED - This applicant can be approved for a credit card.\n\n"
-                f"Approval Probability: {prob:.2f} | Debt Score: {debt_score}"
+                f"✅ **APPROVED**\n\n"
+                f"Approval Probability: **{prob:.2f}**  \n"
+                f"Debt Score: **{debt_score}**"
             )
         else:
             st.error(
-                f"❌ REJECTED - This applicant has a poor Debt Score.\n\n"
-                f"Risk Probability: {1 - prob:.2f} | Debt Score: {debt_score}"
+                f"❌ **REJECTED**\n\n"
+                f"Risk Probability: **{1 - prob:.2f}**  \n"
+                f"Debt Score: **{debt_score}**"
             )
 
     except Exception as e:
         st.error(f"Prediction failed: {e}")
 
-
 # --------------------------------------------------
-# Batch Prediction via CSV Upload
+# Batch Prediction Section
 # --------------------------------------------------
 st.markdown("---")
-st.header("📂 Batch Prediction from CSV")
+st.header("📂 Batch Credit Check (CSV Upload)")
 
-uploaded_file = st.file_uploader(
-    "Upload CSV file with applicant details",
-    type=["csv"]
+st.info(
+    "CSV must contain: Applicant_Gender (Male/Female), Applicant_Age, "
+    "Total_Income, Total_Good_Debt, Total_Bad_Debt"
 )
+
+uploaded_file = st.file_uploader("Upload CSV file", type=["csv"])
 
 if uploaded_file:
     try:
@@ -156,34 +208,29 @@ if uploaded_file:
 
         missing_cols = [c for c in required_cols if c not in df.columns]
         if missing_cols:
-            st.error(f"❌ Missing required columns: {missing_cols}")
+            st.error(f"❌ Missing columns: {missing_cols}")
             st.stop()
 
-        # Encode gender
         df["Applicant_Gender"] = df["Applicant_Gender"].map(
             {"Male": 1, "Female": 0}
         )
 
         if df["Applicant_Gender"].isnull().any():
-            st.error("❌ Applicant_Gender must be 'Male' or 'Female'")
+            st.error("❌ Applicant_Gender must be Male or Female")
             st.stop()
 
-        # Create Debt Score
         df["Debt_Score"] = df["Total_Good_Debt"] - df["Total_Bad_Debt"]
 
-        # Arrange columns in correct order
         X_batch = df[FEATURES]
 
-        # Predict probabilities
         df["Approval_Probability"] = model.predict_proba(X_batch)[:, 1]
         df["Decision"] = df["Approval_Probability"].apply(
             lambda x: "APPROVED" if x >= 0.5 else "REJECTED"
         )
 
-        st.subheader("✅ Prediction Results")
+        st.subheader("✅ Batch Prediction Results")
         st.dataframe(df)
 
-        # Download results
         csv = df.to_csv(index=False).encode("utf-8")
         st.download_button(
             "⬇️ Download Predictions",
@@ -194,11 +241,3 @@ if uploaded_file:
 
     except Exception as e:
         st.error(f"Batch prediction failed: {e}")
-
-
-
-
-
-
-
-
