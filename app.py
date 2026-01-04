@@ -44,7 +44,7 @@ def add_bg_from_local(image_file):
         unsafe_allow_html=True
     )
 
-add_bg_from_local("bank_bg.png")
+add_bg_from_local("bank-bg.jpg")
 
 # --------------------------------------------------
 # Title & Hero Section
@@ -241,3 +241,4 @@ if uploaded_file:
 
     except Exception as e:
         st.error(f"Batch prediction failed: {e}")
+
