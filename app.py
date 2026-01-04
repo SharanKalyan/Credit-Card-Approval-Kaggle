@@ -128,6 +128,73 @@ if submitted:
         st.error(f"Prediction failed: {e}")
 
 
+# --------------------------------------------------
+# Batch Prediction via CSV Upload
+# --------------------------------------------------
+st.markdown("---")
+st.header("📂 Batch Prediction from CSV")
+
+uploaded_file = st.file_uploader(
+    "Upload CSV file with applicant details",
+    type=["csv"]
+)
+
+if uploaded_file:
+    try:
+        df = pd.read_csv(uploaded_file)
+
+        st.subheader("📄 Uploaded Data Preview")
+        st.dataframe(df.head())
+
+        required_cols = [
+            "Applicant_Gender",
+            "Applicant_Age",
+            "Total_Income",
+            "Total_Good_Debt",
+            "Total_Bad_Debt"
+        ]
+
+        missing_cols = [c for c in required_cols if c not in df.columns]
+        if missing_cols:
+            st.error(f"❌ Missing required columns: {missing_cols}")
+            st.stop()
+
+        # Encode gender
+        df["Applicant_Gender"] = df["Applicant_Gender"].map(
+            {"Male": 1, "Female": 0}
+        )
+
+        if df["Applicant_Gender"].isnull().any():
+            st.error("❌ Applicant_Gender must be 'Male' or 'Female'")
+            st.stop()
+
+        # Create Debt Score
+        df["Debt_Score"] = df["Total_Good_Debt"] - df["Total_Bad_Debt"]
+
+        # Arrange columns in correct order
+        X_batch = df[FEATURES]
+
+        # Predict probabilities
+        df["Approval_Probability"] = model.predict_proba(X_batch)[:, 1]
+        df["Decision"] = df["Approval_Probability"].apply(
+            lambda x: "APPROVED" if x >= 0.5 else "REJECTED"
+        )
+
+        st.subheader("✅ Prediction Results")
+        st.dataframe(df)
+
+        # Download results
+        csv = df.to_csv(index=False).encode("utf-8")
+        st.download_button(
+            "⬇️ Download Predictions",
+            csv,
+            "credit_predictions.csv",
+            "text/csv"
+        )
+
+    except Exception as e:
+        st.error(f"Batch prediction failed: {e}")
+
 
 
 
