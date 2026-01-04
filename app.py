@@ -24,8 +24,8 @@ def add_bg_from_local(image_file):
         .stApp {{
             background-image:
             linear-gradient(
-                rgba(255,255,255,0.88),
-                rgba(255,255,255,0.88)
+                rgba(255,255,255,0.4),
+                rgba(255,255,255,0.4)
             ),
             url("data:image/png;base64,{encoded}");
             background-size: cover;
@@ -241,4 +241,5 @@ if uploaded_file:
 
     except Exception as e:
         st.error(f"Batch prediction failed: {e}")
+
 
