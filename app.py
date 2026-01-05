@@ -18,9 +18,13 @@ st.set_page_config(
 def add_bg_from_local(image_file):
     with open(image_file, "rb") as f:
         encoded = base64.b64encode(f.read()).decode()
+
     st.markdown(
         f"""
         <style>
+        /* -------------------------------
+           App Background
+        -------------------------------- */
         .stApp {{
             background-image:
             linear-gradient(
@@ -31,18 +35,59 @@ def add_bg_from_local(image_file):
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+            color: #000000;
         }}
 
+        /* -------------------------------
+           FORCE ALL TEXT TO BLACK
+        -------------------------------- */
+        html, body, [class*="css"] {{
+            color: #000000 !important;
+        }}
+
+        /* Titles & Headers */
+        h1, h2, h3, h4, h5, h6 {{
+            color: #000000 !important;
+        }}
+
+        /* Paragraphs, labels, markdown */
+        p, span, label, div {{
+            color: #000000 !important;
+        }}
+
+        /* Input labels */
+        .stTextInput label,
+        .stNumberInput label,
+        .stSelectbox label,
+        .stFileUploader label {{
+            color: #000000 !important;
+            font-weight: 600;
+        }}
+
+        /* Info / Success / Error boxes text */
+        .stAlert p {{
+            color: #000000 !important;
+        }}
+
+        /* DataFrame text */
+        .stDataFrame {{
+            color: #000000 !important;
+        }}
+
+        /* Primary button */
         button[kind="primary"] {{
             background-color: #1f4fd8;
             border-radius: 8px;
             padding: 0.6em 1.5em;
             font-weight: 600;
+            color: #ffffff !important;
         }}
+
         </style>
         """,
         unsafe_allow_html=True
     )
+
 
 add_bg_from_local("Banking.png")
 
