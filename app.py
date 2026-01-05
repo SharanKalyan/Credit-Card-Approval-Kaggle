@@ -99,7 +99,7 @@ st.markdown(
         <h2 style="color:#1f4fd8;">
             Check your credit card eligibility here
         </h2>
-        <p style="font-size:16px; color:#444;">
+        <p style="font-size:16px; color:#fcf2f2;">
             This model estimates <b>credit card approval probability</b> 
             using historical applicant patterns.<br>
             Designed to simulate <b>early-stage credit risk screening</b>.
@@ -256,6 +256,7 @@ if uploaded_file:
         "credit_predictions.csv",
         "text/csv"
     )
+
 
 
 
