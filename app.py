@@ -16,8 +16,6 @@ st.set_page_config(
 # Background Image Styling
 # --------------------------------------------------
 def add_bg_from_local(image_file):
-    import base64
-
     with open(image_file, "rb") as f:
         encoded = base64.b64encode(f.read()).decode()
 
@@ -54,7 +52,6 @@ def add_bg_from_local(image_file):
             color: #000000 !important;
         }}
 
-        /* Input labels */
         .stTextInput label,
         .stNumberInput label,
         .stSelectbox label,
@@ -63,27 +60,26 @@ def add_bg_from_local(image_file):
             font-weight: 600;
         }}
 
-        /* Info / Success / Error messages */
         .stAlert p {{
             color: #000000 !important;
         }}
 
         /* -------------------------------------------------
-       PRIMARY BUTTON (Predict) – White Button
+           PRIMARY BUTTON (Predict) – WHITE
         --------------------------------------------------*/
-        button[kind="primary"] {
-        background-color: #ffffff !important;
-        color: #000000 !important;
-        border-radius: 8px;
-        padding: 0.6em 1.5em;
-        font-weight: 600;
-        border: 2px solid #1f4fd8;
-}
+        button[kind="primary"] {{
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            border-radius: 8px;
+            padding: 0.6em 1.5em;
+            font-weight: 600;
+            border: 2px solid #1f4fd8;
+        }}
 
-button[kind="primary"]:hover {
-    background-color: #f2f4f8 !important;
-    color: #000000 !important;
-}
+        button[kind="primary"]:hover {{
+            background-color: #f2f4f8 !important;
+            color: #000000 !important;
+        }}
 
         /* -------------------------------------------------
            FILE UPLOADER BUTTON (Browse files)
@@ -104,7 +100,6 @@ button[kind="primary"]:hover {
         """,
         unsafe_allow_html=True
     )
-
 
 add_bg_from_local("Banking.png")
 
@@ -172,7 +167,6 @@ FEATURES = [
 st.header("🧍 Individual Credit Check")
 
 with st.form("credit_form"):
-
     gender = st.selectbox("Applicant Gender", ["Male", "Female"])
 
     age = st.number_input(
@@ -303,10 +297,3 @@ if uploaded_file:
 
     except Exception as e:
         st.error(f"Batch prediction failed: {e}")
-
-
-
-
-
-
-
