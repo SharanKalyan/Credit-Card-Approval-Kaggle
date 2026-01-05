@@ -13,7 +13,7 @@ st.set_page_config(
 )
 
 # --------------------------------------------------
-# Background Image Styling
+# Background Image + THEME FIXES
 # --------------------------------------------------
 def add_bg_from_local(image_file):
     with open(image_file, "rb") as f:
@@ -22,6 +22,7 @@ def add_bg_from_local(image_file):
     st.markdown(
         f"""
         <style>
+
         /* -------------------------------------------------
            App Background
         --------------------------------------------------*/
@@ -38,62 +39,61 @@ def add_bg_from_local(image_file):
         }}
 
         /* -------------------------------------------------
-           FORCE ALL TEXT TO BLACK
+           GLOBAL TEXT COLOR
         --------------------------------------------------*/
         html, body, [class*="css"] {{
             color: #000000 !important;
         }}
 
-        h1, h2, h3, h4, h5, h6 {{
-            color: #000000 !important;
-        }}
-
-        p, span, label, div {{
-            color: #000000 !important;
-        }}
-
-        .stTextInput label,
-        .stNumberInput label,
-        .stSelectbox label,
-        .stFileUploader label {{
-            color: #000000 !important;
-            font-weight: 600;
-        }}
-
-        .stAlert p {{
-            color: #000000 !important;
-        }}
-
         /* -------------------------------------------------
-           PRIMARY BUTTON (Predict) – BLUE + WHITE TEXT
+           PRIMARY BUTTON (Predict)
         --------------------------------------------------*/
-        button[kind="primary"] {{
+        div[data-testid="stFormSubmitButton"] button {{
             background-color: #1f4fd8 !important;
             color: #ffffff !important;
-            border-radius: 8px;
-            padding: 0.6em 1.5em;
-            font-weight: 600;
-            border: none;
+            border-radius: 8px !important;
+            font-weight: 600 !important;
+            border: none !important;
         }}
 
-        button[kind="primary"]:hover {{
+        div[data-testid="stFormSubmitButton"] button:hover {{
             background-color: #163bb5 !important;
             color: #ffffff !important;
         }}
 
         /* -------------------------------------------------
-           FILE UPLOADER BUTTON (Browse files)
+           SELECTBOX (Gender)
         --------------------------------------------------*/
-        .stFileUploader button {{
-            background-color: #1f4fd8 !important;
-            color: #ffffff !important;
-            border-radius: 6px;
-            font-weight: 600;
+        div[data-baseweb="select"] > div {{
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            border-radius: 6px !important;
         }}
 
-        .stFileUploader button:hover {{
-            background-color: #163bb5 !important;
+        div[data-baseweb="select"] span {{
+            color: #000000 !important;
+        }}
+
+        div[data-baseweb="select"] svg {{
+            fill: #000000 !important;
+        }}
+
+        ul[role="listbox"] li {{
+            background-color: #ffffff !important;
+            color: #000000 !important;
+        }}
+
+        ul[role="listbox"] li:hover {{
+            background-color: #f2f4f8 !important;
+        }}
+
+        /* -------------------------------------------------
+           FILE UPLOADER BUTTON
+        --------------------------------------------------*/
+        div[data-testid="stFileUploader"] button {{
+            background-color: #1f4fd8 !important;
             color: #ffffff !important;
+            font-weight: 600 !important;
         }}
 
         </style>
@@ -101,7 +101,6 @@ def add_bg_from_local(image_file):
         unsafe_allow_html=True
     )
 
-# Apply background
 add_bg_from_local("Banking.png")
 
 # --------------------------------------------------
@@ -151,7 +150,7 @@ if not model_path.exists():
 model = load_model(str(model_path))
 
 # --------------------------------------------------
-# Features (ORDER MATTERS)
+# Features
 # --------------------------------------------------
 FEATURES = [
     "Applicant_Gender",
@@ -170,12 +169,7 @@ st.header("🧍 Individual Credit Check")
 with st.form("credit_form"):
     gender = st.selectbox("Applicant Gender", ["Male", "Female"])
 
-    age = st.number_input(
-        "Applicant Age",
-        min_value=18,
-        value=25,
-        step=1
-    )
+    age = st.number_input("Applicant Age", min_value=18, value=25, step=1)
 
     income = st.number_input(
         "Total Income",
@@ -201,42 +195,31 @@ with st.form("credit_form"):
     submitted = st.form_submit_button("Predict")
 
 if submitted:
-    try:
-        gender_encoded = 1 if gender == "Male" else 0
-        debt_score = good_debt - bad_debt
+    gender_encoded = 1 if gender == "Male" else 0
+    debt_score = good_debt - bad_debt
 
-        X = pd.DataFrame(
-            [[
-                gender_encoded,
-                age,
-                income,
-                good_debt,
-                bad_debt,
-                debt_score
-            ]],
-            columns=FEATURES
+    X = pd.DataFrame(
+        [[gender_encoded, age, income, good_debt, bad_debt, debt_score]],
+        columns=FEATURES
+    )
+
+    prob = model.predict_proba(X)[0][1]
+
+    if prob >= 0.5:
+        st.success(
+            f"✅ **APPROVED**\n\n"
+            f"Approval Probability: **{prob:.2f}**  \n"
+            f"Debt Score: **{debt_score}**"
+        )
+    else:
+        st.error(
+            f"❌ **REJECTED**\n\n"
+            f"Risk Probability: **{1 - prob:.2f}**  \n"
+            f"Debt Score: **{debt_score}**"
         )
 
-        prob = model.predict_proba(X)[0][1]
-
-        if prob >= 0.5:
-            st.success(
-                f"✅ **APPROVED**\n\n"
-                f"Approval Probability: **{prob:.2f}**  \n"
-                f"Debt Score: **{debt_score}**"
-            )
-        else:
-            st.error(
-                f"❌ **REJECTED**\n\n"
-                f"Risk Probability: **{1 - prob:.2f}**  \n"
-                f"Debt Score: **{debt_score}**"
-            )
-
-    except Exception as e:
-        st.error(f"Prediction failed: {e}")
-
 # --------------------------------------------------
-# Batch Prediction Section
+# Batch Prediction
 # --------------------------------------------------
 st.markdown("---")
 st.header("📂 Batch Credit Check (CSV Upload)")
@@ -249,52 +232,44 @@ st.info(
 uploaded_file = st.file_uploader("Upload CSV file", type=["csv"])
 
 if uploaded_file:
-    try:
-        df = pd.read_csv(uploaded_file)
+    df = pd.read_csv(uploaded_file)
 
-        st.subheader("📄 Uploaded Data Preview")
-        st.dataframe(df.head())
+    required_cols = [
+        "Applicant_Gender",
+        "Applicant_Age",
+        "Total_Income",
+        "Total_Good_Debt",
+        "Total_Bad_Debt"
+    ]
 
-        required_cols = [
-            "Applicant_Gender",
-            "Applicant_Age",
-            "Total_Income",
-            "Total_Good_Debt",
-            "Total_Bad_Debt"
-        ]
+    missing_cols = [c for c in required_cols if c not in df.columns]
+    if missing_cols:
+        st.error(f"❌ Missing columns: {missing_cols}")
+        st.stop()
 
-        missing_cols = [c for c in required_cols if c not in df.columns]
-        if missing_cols:
-            st.error(f"❌ Missing columns: {missing_cols}")
-            st.stop()
+    df["Applicant_Gender"] = df["Applicant_Gender"].map(
+        {"Male": 1, "Female": 0}
+    )
 
-        df["Applicant_Gender"] = df["Applicant_Gender"].map(
-            {"Male": 1, "Female": 0}
-        )
+    if df["Applicant_Gender"].isnull().any():
+        st.error("❌ Applicant_Gender must be Male or Female")
+        st.stop()
 
-        if df["Applicant_Gender"].isnull().any():
-            st.error("❌ Applicant_Gender must be Male or Female")
-            st.stop()
+    df["Debt_Score"] = df["Total_Good_Debt"] - df["Total_Bad_Debt"]
 
-        df["Debt_Score"] = df["Total_Good_Debt"] - df["Total_Bad_Debt"]
+    X_batch = df[FEATURES]
 
-        X_batch = df[FEATURES]
+    df["Approval_Probability"] = model.predict_proba(X_batch)[:, 1]
+    df["Decision"] = df["Approval_Probability"].apply(
+        lambda x: "APPROVED" if x >= 0.5 else "REJECTED"
+    )
 
-        df["Approval_Probability"] = model.predict_proba(X_batch)[:, 1]
-        df["Decision"] = df["Approval_Probability"].apply(
-            lambda x: "APPROVED" if x >= 0.5 else "REJECTED"
-        )
+    st.dataframe(df)
 
-        st.subheader("✅ Batch Prediction Results")
-        st.dataframe(df)
-
-        csv = df.to_csv(index=False).encode("utf-8")
-        st.download_button(
-            "⬇️ Download Predictions",
-            csv,
-            "credit_predictions.csv",
-            "text/csv"
-        )
-
-    except Exception as e:
-        st.error(f"Batch prediction failed: {e}")
+    csv = df.to_csv(index=False).encode("utf-8")
+    st.download_button(
+        "⬇️ Download Predictions",
+        csv,
+        "credit_predictions.csv",
+        "text/csv"
+    )
