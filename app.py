@@ -33,6 +33,7 @@ def add_bg_from_local(image_file):
             background-size: 140;
             background-position: center;
             background-repeat: no-repeat;
+            background-attachment: fixed;
         }}
 
         html, body, [class*="css"] {{
@@ -255,6 +256,7 @@ if uploaded_file:
         "credit_predictions.csv",
         "text/csv"
     )
+
 
 
 
