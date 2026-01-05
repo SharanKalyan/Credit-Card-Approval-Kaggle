@@ -26,11 +26,11 @@ def add_bg_from_local(image_file):
         .stApp {{
             background-image:
             linear-gradient(
-                rgba(255,255,255,0.7),
-                rgba(255,255,255,0.7)
+                rgba(255,255,255,0),
+                rgba(255,255,255,0)
             ),
             url("data:image/png;base64,{encoded}");
-            background-size: 120%;
+            background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
         }}
@@ -255,5 +255,6 @@ if uploaded_file:
         "credit_predictions.csv",
         "text/csv"
     )
+
 
 
