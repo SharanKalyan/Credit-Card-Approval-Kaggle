@@ -101,7 +101,7 @@ def add_bg_from_local(image_file):
         unsafe_allow_html=True
     )
 
-add_bg_from_local("Banking.png")
+add_bg_from_local("AdobeStock.Jpeg")
 
 # --------------------------------------------------
 # Title & Hero Section
@@ -273,3 +273,4 @@ if uploaded_file:
         "credit_predictions.csv",
         "text/csv"
     )
+
