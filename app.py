@@ -110,7 +110,7 @@ st.markdown(
 
 st.markdown(
     """
-    🔗 **Full implementation & methodology:**  
+    🔗 **The complete architecture, data pipeline, and model implementation are available in this project’s GitHub repository**  
     [Credit Card Approval System – GitHub](https://github.com/SharanKalyan/Credit-Card-Approval-Kaggle)
     """
 )
@@ -255,3 +255,4 @@ if uploaded_file:
         "credit_predictions.csv",
         "text/csv"
     )
+
