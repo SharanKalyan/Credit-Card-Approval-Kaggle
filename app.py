@@ -65,21 +65,21 @@ def add_bg_from_local(image_file):
         }}
 
         /* -------------------------------------------------
-           PRIMARY BUTTON (Predict) – WHITE
+           PRIMARY BUTTON (Predict) – BLUE + WHITE TEXT
         --------------------------------------------------*/
-       button[kind="primary"] {
-        background-color: #1f4fd8 !important;   /* Bank blue */
-        color: #ffffff !important;              /* WHITE text */
-        border-radius: 8px;
-        padding: 0.6em 1.5em;
-        font-weight: 600;
-        border: none;
-        }
-    
-        button[kind="primary"]:hover {
-        background-color: #163bb5 !important;
-        color: #ffffff !important;
-        }
+        button[kind="primary"] {{
+            background-color: #1f4fd8 !important;
+            color: #ffffff !important;
+            border-radius: 8px;
+            padding: 0.6em 1.5em;
+            font-weight: 600;
+            border: none;
+        }}
+
+        button[kind="primary"]:hover {{
+            background-color: #163bb5 !important;
+            color: #ffffff !important;
+        }}
 
         /* -------------------------------------------------
            FILE UPLOADER BUTTON (Browse files)
@@ -101,6 +101,7 @@ def add_bg_from_local(image_file):
         unsafe_allow_html=True
     )
 
+# Apply background
 add_bg_from_local("Banking.png")
 
 # --------------------------------------------------
@@ -297,4 +298,3 @@ if uploaded_file:
 
     except Exception as e:
         st.error(f"Batch prediction failed: {e}")
-
