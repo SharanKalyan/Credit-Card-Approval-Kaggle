@@ -16,15 +16,17 @@ st.set_page_config(
 # Background Image Styling
 # --------------------------------------------------
 def add_bg_from_local(image_file):
+    import base64
+
     with open(image_file, "rb") as f:
         encoded = base64.b64encode(f.read()).decode()
 
     st.markdown(
         f"""
         <style>
-        /* -------------------------------
+        /* -------------------------------------------------
            App Background
-        -------------------------------- */
+        --------------------------------------------------*/
         .stApp {{
             background-image:
             linear-gradient(
@@ -35,22 +37,19 @@ def add_bg_from_local(image_file):
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            color: #000000;
         }}
 
-        /* -------------------------------
+        /* -------------------------------------------------
            FORCE ALL TEXT TO BLACK
-        -------------------------------- */
+        --------------------------------------------------*/
         html, body, [class*="css"] {{
             color: #000000 !important;
         }}
 
-        /* Titles & Headers */
         h1, h2, h3, h4, h5, h6 {{
             color: #000000 !important;
         }}
 
-        /* Paragraphs, labels, markdown */
         p, span, label, div {{
             color: #000000 !important;
         }}
@@ -64,22 +63,34 @@ def add_bg_from_local(image_file):
             font-weight: 600;
         }}
 
-        /* Info / Success / Error boxes text */
+        /* Info / Success / Error messages */
         .stAlert p {{
             color: #000000 !important;
         }}
 
-        /* DataFrame text */
-        .stDataFrame {{
-            color: #000000 !important;
-        }}
-
-        /* Primary button */
+        /* -------------------------------------------------
+           PRIMARY BUTTON (Predict)
+        --------------------------------------------------*/
         button[kind="primary"] {{
             background-color: #1f4fd8;
+            color: #ffffff !important;
             border-radius: 8px;
             padding: 0.6em 1.5em;
             font-weight: 600;
+        }}
+
+        /* -------------------------------------------------
+           FILE UPLOADER BUTTON (Browse files)
+        --------------------------------------------------*/
+        .stFileUploader button {{
+            background-color: #1f4fd8 !important;
+            color: #ffffff !important;
+            border-radius: 6px;
+            font-weight: 600;
+        }}
+
+        .stFileUploader button:hover {{
+            background-color: #163bb5 !important;
             color: #ffffff !important;
         }}
 
@@ -286,6 +297,7 @@ if uploaded_file:
 
     except Exception as e:
         st.error(f"Batch prediction failed: {e}")
+
 
 
 
