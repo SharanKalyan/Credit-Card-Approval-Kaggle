@@ -67,19 +67,19 @@ def add_bg_from_local(image_file):
         /* -------------------------------------------------
            PRIMARY BUTTON (Predict) – WHITE
         --------------------------------------------------*/
-        button[kind="primary"] {{
-            background-color: #ffffff !important;
-            color: #000000 !important;
-            border-radius: 8px;
-            padding: 0.6em 1.5em;
-            font-weight: 600;
-            border: 2px solid #1f4fd8;
-        }}
-
-        button[kind="primary"]:hover {{
-            background-color: #f2f4f8 !important;
-            color: #000000 !important;
-        }}
+       button[kind="primary"] {
+        background-color: #1f4fd8 !important;   /* Bank blue */
+        color: #ffffff !important;              /* WHITE text */
+        border-radius: 8px;
+        padding: 0.6em 1.5em;
+        font-weight: 600;
+        border: none;
+        }
+    
+        button[kind="primary"]:hover {
+        background-color: #163bb5 !important;
+        color: #ffffff !important;
+        }
 
         /* -------------------------------------------------
            FILE UPLOADER BUTTON (Browse files)
@@ -297,3 +297,4 @@ if uploaded_file:
 
     except Exception as e:
         st.error(f"Batch prediction failed: {e}")
+
