@@ -30,7 +30,7 @@ def add_bg_from_local(image_file):
                 rgba(255,255,255,0)
             ),
             url("data:image/png;base64,{encoded}");
-            background-size: 160%;
+            background-size: 140%;
             background-position: center;
             background-repeat: no-repeat;
             background-attachment: fixed;
@@ -256,6 +256,7 @@ if uploaded_file:
         "credit_predictions.csv",
         "text/csv"
     )
+
 
 
 
