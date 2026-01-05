@@ -68,7 +68,7 @@ st.markdown(
 
 st.markdown(
     """
-    🔗 **Project Repository:**  
+    🔗 **The complete architecture, data pipeline, and model implementation are available in this project’s GitHub repository.**  
     [Credit Card Approval System](https://github.com/SharanKalyan/Credit-Card-Approval-Kaggle)
     """
 )
@@ -241,5 +241,6 @@ if uploaded_file:
 
     except Exception as e:
         st.error(f"Batch prediction failed: {e}")
+
 
 
