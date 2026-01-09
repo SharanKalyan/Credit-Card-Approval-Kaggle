@@ -13,7 +13,7 @@ st.set_page_config(
 )
 
 # --------------------------------------------------
-# Background Image + THEME FIXES
+# Animated Background Function
 # --------------------------------------------------
 def add_bg_from_local(image_file):
     with open(image_file, "rb") as f:
@@ -22,6 +22,16 @@ def add_bg_from_local(image_file):
     st.markdown(
         f"""
         <style>
+        @keyframes fadeZoom {{
+            0% {{
+                opacity: 0;
+                transform: scale(1.05);
+            }}
+            100% {{
+                opacity: 1;
+                transform: scale(1);
+            }}
+        }}
 
         .stApp {{
             background-image:
@@ -30,10 +40,11 @@ def add_bg_from_local(image_file):
                 rgba(255,255,255,0)
             ),
             url("data:image/png;base64,{encoded}");
-            background-size: 100%;
+            background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             background-attachment: fixed;
+            animation: fadeZoom 0.9s ease-in-out;
         }}
 
         html, body, [class*="css"] {{
@@ -58,34 +69,18 @@ def add_bg_from_local(image_file):
             border-radius: 6px !important;
         }}
 
-        div[data-baseweb="select"] span {{
-            color: #000000 !important;
-        }}
-
-        div[data-baseweb="select"] svg {{
-            fill: #000000 !important;
-        }}
-
         ul[role="listbox"] li {{
             background-color: #ffffff !important;
             color: #000000 !important;
         }}
-
-        ul[role="listbox"] li:hover {{
-            background-color: #f2f4f8 !important;
-        }}
-
-        div[data-testid="stFileUploader"] button {{
-            background-color: #1f4fd8 !important;
-            color: #ffffff !important;
-            font-weight: 600 !important;
-        }}
-
         </style>
         """,
         unsafe_allow_html=True
     )
 
+# --------------------------------------------------
+# Initial Landing Background
+# --------------------------------------------------
 add_bg_from_local("landingpage.png")
 
 # --------------------------------------------------
@@ -100,7 +95,7 @@ st.markdown(
             Check your credit card eligibility here
         </h2>
         <p style="font-size:16px; color:#fcf2f2;">
-            This model estimates <b>credit card approval probability</b> 
+            This model estimates <b>credit card approval probability</b>
             using historical applicant patterns.<br>
             Designed to simulate <b>early-stage credit risk screening</b>.
         </p>
@@ -109,35 +104,8 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.markdown(
-    """
-    🔗 **The complete architecture, data pipeline, and model implementation are available in this project’s GitHub repository**  
-    [Credit Card Approval System – GitHub](https://github.com/SharanKalyan/Credit-Card-Approval-Kaggle)
-    """
-)
-
 st.info("🔒 This is a demo ML application. No data is stored.")
-
 st.markdown("---")
-
-# --------------------------------------------------
-# Model Summary (Recruiter Signal)
-# --------------------------------------------------
-with st.expander("ℹ️ Model Overview & Assumptions"):
-    st.markdown(
-        """
-        **Model:** Random Forest Classifier  
-        **Objective:** Estimate likelihood of credit card approval  
-        **Usage:** Early-stage screening (pre-underwriting)  
-
-        **Decision Thresholds:**
-        - ≥ 0.75 → High confidence approval
-        - 0.50 – 0.75 → Borderline (manual review)
-        - < 0.50 → High risk
-
-        *This is a demonstration model and not a production credit decision system.*
-        """
-    )
 
 # --------------------------------------------------
 # Load Model
@@ -190,6 +158,13 @@ if submitted:
     )
 
     prob = model.predict_proba(X)[0][1]
+    prediction = model.predict(X)[0]  # 1 = Approved, 0 = Rejected
+
+    # 🔁 Animated background switch
+    if prediction == 1:
+        add_bg_from_local("approved.png")
+    else:
+        add_bg_from_local("rejected.png")
 
     if prob >= 0.75:
         st.success(f"✅ **HIGH CONFIDENCE APPROVAL**\n\nApproval Probability: **{prob:.2f}**")
@@ -199,7 +174,7 @@ if submitted:
         st.error(f"❌ **HIGH RISK – REJECTION LIKELY**\n\nApproval Probability: **{prob:.2f}**")
 
 # --------------------------------------------------
-# Batch Prediction
+# Batch Prediction (UNCHANGED)
 # --------------------------------------------------
 st.markdown("---")
 st.header("📂 Batch Credit Check (CSV Upload)")
@@ -209,7 +184,6 @@ st.info(
     "This simulates a real-world bank pre-screening workflow."
 )
 
-# Sample CSV
 sample_df = pd.DataFrame({
     "Applicant_Gender": ["Male", "Female"],
     "Applicant_Age": [30, 45],
@@ -256,23 +230,3 @@ if uploaded_file:
         "credit_predictions.csv",
         "text/csv"
     )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
