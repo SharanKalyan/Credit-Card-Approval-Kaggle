@@ -108,6 +108,45 @@ st.info("🔒 This is a demo ML application. No data is stored.")
 st.markdown("---")
 
 # --------------------------------------------------
+# Model Information (Expandable Section)
+# --------------------------------------------------
+with st.expander("ℹ️ Model Information & Decision Logic"):
+    st.markdown(
+        """
+        ### 🧠 Model Overview
+        - **Model Used:** Random Forest Classifier  
+        - Trained on historical credit card application data  
+        - Designed for **early-stage credit approval screening**, not final decisions  
+
+        ### 📊 Model Performance (Validation Set)
+        - **Recall:** ~0.86  
+        - **Precision:** ~0.83  
+        - **F1 Score:** ~0.84  
+
+        **How to interpret this:**
+        - High **recall** ensures most eligible applicants are correctly identified  
+        - Strong **precision** reduces false approvals  
+        - Balanced **F1 score** indicates stable real-world performance  
+
+        ### 🧾 Decision Interpretation (Based on Approval Probability)
+        - **0 – 50% → ❌ Reject**  
+          High risk profile, unlikely to meet approval criteria  
+
+        - **50 – 80% → ⚠️ Flag for Manual Review**  
+          Borderline cases requiring human judgment or additional checks  
+
+        - **80%+ → ✅ Approve**  
+          Strong applicant profile with high confidence  
+
+        > ⚠️ *This tool is for demonstration purposes only and does not replace official credit risk assessments.*
+        """
+    )
+
+st.markdown("---")
+
+
+
+# --------------------------------------------------
 # Load Model
 # --------------------------------------------------
 @st.cache_resource
@@ -230,4 +269,5 @@ if uploaded_file:
         "credit_predictions.csv",
         "text/csv"
     )
+
 
