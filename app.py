@@ -162,9 +162,9 @@ if submitted:
 
     # 🔁 Animated background switch
     if prediction == 1:
-        add_bg_from_local("approved.png")
+        add_bg_from_local("landingpage.png")
     else:
-        add_bg_from_local("rejected.png")
+        add_bg_from_local("landingpage.png")
 
     if prob >= 0.75:
         st.success(f"✅ **HIGH CONFIDENCE APPROVAL**\n\nApproval Probability: **{prob:.2f}**")
@@ -230,3 +230,4 @@ if uploaded_file:
         "credit_predictions.csv",
         "text/csv"
     )
+
