@@ -126,7 +126,7 @@ with st.expander("ℹ️ Model Information & Decision Logic"):
         **How to interpret this:**
         - High **recall** ensures most eligible applicants are correctly identified  
         - Strong **precision** reduces false approvals  
-        - Balanced **F1 score** indicates stable real-world performance  
+        - High **F1 score** indicates stable real-world performance  
 
         ### 🧾 Decision Interpretation (Based on Approval Probability)
         - **0 – 50% → ❌ Reject**  
@@ -269,6 +269,7 @@ if uploaded_file:
         "credit_predictions.csv",
         "text/csv"
     )
+
 
 
 
