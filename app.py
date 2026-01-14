@@ -86,7 +86,7 @@ add_bg_from_local("landingpage.png")
 # --------------------------------------------------
 # Title & Hero Section
 # --------------------------------------------------
-st.title("💳 Credit Card Approval Prediction App")
+st.title("Credit Card Approval Prediction App")
 
 st.markdown(
     """
@@ -110,15 +110,15 @@ st.markdown("---")
 # --------------------------------------------------
 # Model Information (Expandable Section)
 # --------------------------------------------------
-with st.expander("ℹ️ Model Information & Decision Logic"):
+with st.expander("Model Information & Decision Logic"):
     st.markdown(
         """
-        ### 🧠 Model Overview
+        ### Model Overview
         - **Model Used:** Random Forest Classifier  
         - Trained on historical credit card application data  
         - Designed for **early-stage credit approval screening**  
 
-        ### 📊 Model Performance (Validation Set)
+        ### Model Performance (Validation Set)
         - **Recall:** 0.98  
         - **Precision:** 0.99  
         - **F1 Score:** 0.99  
@@ -128,7 +128,7 @@ with st.expander("ℹ️ Model Information & Decision Logic"):
         - Strong **precision** reduces false approvals  
         - High **F1 score** indicates stable real-world performance  
 
-        ### 🧾 Decision Interpretation (Based on Approval Probability)
+        ### Decision Interpretation (Based on Approval Probability)
         - **0 – 50% → ❌ Reject**  
           High risk profile, unlikely to meet approval criteria  
 
@@ -269,6 +269,7 @@ if uploaded_file:
         "credit_predictions.csv",
         "text/csv"
     )
+
 
 
 
