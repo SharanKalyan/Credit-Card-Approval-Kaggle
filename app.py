@@ -110,7 +110,7 @@ st.markdown("---")
 # --------------------------------------------------
 # Model Information (Expandable Section)
 # --------------------------------------------------
-with st.expander("# Model Information & Decision Logic"):
+with st.expander("Model Information & Decision Logic"):
     st.markdown(
         """
         ### Model Overview
@@ -269,6 +269,7 @@ if uploaded_file:
         "credit_predictions.csv",
         "text/csv"
     )
+
 
 
 
