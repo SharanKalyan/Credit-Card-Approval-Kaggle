@@ -176,7 +176,7 @@ FEATURES = [
 # --------------------------------------------------
 # Individual Prediction
 # --------------------------------------------------
-st.header("🧍 Individual Credit Check")
+st.header("Individual Credit Check")
 
 with st.form("credit_form"):
     gender = st.selectbox("Applicant Gender", ["Male", "Female"])
@@ -269,6 +269,7 @@ if uploaded_file:
         "credit_predictions.csv",
         "text/csv"
     )
+
 
 
 
