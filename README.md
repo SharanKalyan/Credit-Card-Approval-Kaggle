@@ -7,7 +7,6 @@ The data is about approving Credit cards for the customers based on some paramet
 The data was highly imballanced with only less than 1% of the data belonging to one class (0) and the other 99% belonging to the other class. (1) 
 
 I have Analysed the data and visualized it. While doing the analysis, I was able to infer the most important features that affected the approval of Credit cards and i've creaetd some extra features ("Debit_Score") that help classify between  the 2 classes. 
-
 I have tried the models without these new features and the results weren't very satisfactory. 
 This data is a great example of how feature engineering can be a game changer! 
 
