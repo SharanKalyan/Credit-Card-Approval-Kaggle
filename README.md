@@ -1,6 +1,7 @@
 # Credit-Card-Approval-Kaggle
 
 Data Source: https://www.kaggle.com 
+
 Model deployed on Streamlit: https://credit-card-approval-application.streamlit.app/
 
 The data is about approving Credit cards for the customers based on some parameters like age, gender, income, realty, education, family status etc. 
